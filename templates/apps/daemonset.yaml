@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: python-web-daemonset
+spec:
+  selector:
+      matchLabels:
+        name: python-web-daemonset 
+  template:
+    metadata:
+      labels:
+        name: python-web-daemonset 
+    spec:
+      containers:
+      - image: jdob/python-web
+        imagePullPolicy: Always
+        name: registry
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+      serviceAccount: default
+      terminationGracePeriodSeconds: 10
