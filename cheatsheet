@@ -1,0 +1,22 @@
+= Grant Admin Privileges =
+
+oc adm policy add-cluster-role-to-user cluster-admin <user>
+
+
+= Allow OpenShift to run Root Images =
+
+* Grants running a container under any UID to the default service account in the current project
+
+oc adm policy add-scc-to-user anyuid -z default
+
+
+= Run an Authenticated Curl Command against the API =
+
+curl -k -H "Authorization: Bearer `oc whoami -t`" <url>
+
+
+= Add a HTTP User to an Ansible Installed OpenShift =
+
+* Password file: /etc/origin/master/htpasswd
+
+htpasswd -b ./htpasswd <user> <pass>
