@@ -1,0 +1,106 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    creationTimestamp: null
+    name: pv01
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 2Gi
+    nfs:
+      path: /pv/pv1
+      server: 192.168.1.40
+    persistentVolumeReclaimPolicy: Recycle
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: null
+    name: pv02
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 2Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: gitlab-ce-redis-data
+      namespace: gitlab
+      resourceVersion: "2359820"
+      uid: a206f66b-0511-11e7-810a-525400755348
+    nfs:
+      path: /pv/pv2
+      server: 192.168.1.40
+    persistentVolumeReclaimPolicy: Recycle
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: null
+    name: pv03
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 2Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: gitlab-ce-etc
+      namespace: gitlab
+      resourceVersion: "2359823"
+      uid: a20743dc-0511-11e7-810a-525400755348
+    nfs:
+      path: /pv/pv3
+      server: 192.168.1.40
+    persistentVolumeReclaimPolicy: Recycle
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: null
+    name: pv04
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 2Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: gitlab-ce-postgresql
+      namespace: gitlab
+      resourceVersion: "2075764"
+      uid: a21808fb-0511-11e7-810a-525400755348
+    nfs:
+      path: /pv/pv4
+      server: 192.168.1.40
+    persistentVolumeReclaimPolicy: Recycle
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    creationTimestamp: null
+    name: pv05
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 2Gi
+    nfs:
+      path: /pv/pv5
+      server: 192.168.1.40
+    persistentVolumeReclaimPolicy: Recycle
+  status: {}
+kind: List
+metadata: {}
