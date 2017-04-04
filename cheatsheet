@@ -19,4 +19,9 @@ curl -k -H "Authorization: Bearer `oc whoami -t`" <url>
 
 * Password file: /etc/origin/master/htpasswd
 
+htpasswd ./htpasswd <user>
+  - or -
 htpasswd -b ./htpasswd <user> <pass>
+
+
+
