@@ -1,0 +1,8 @@
+doblabs.io:53 {
+    log stdout
+    file /root/core/doblabs.io
+}
+.:53 {
+    proxy . 8.8.8.8:53
+    log stdout
+}
