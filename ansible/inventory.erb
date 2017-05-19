@@ -3,19 +3,40 @@ masters
 nodes
 
 [OSEv3:vars]
+
+# -- Ansible Configuration -----
 ansible_ssh_user=root
+
+# -- OpenShift Version -----
 deployment_type=origin
+openshift_release=v1.4.0
+# openshift_image_tag=v1.5.1
+
+# -- Configures Auth -----
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 containerized=true
-openshift_release=v1.4
-openshift_image_tag=v1.4.0
-openshift_public_hostname=openshift.lab.dobtech.io
-openshift_master_default_subdomain=apps.openshift.lab.dobtech.io
+
+# -- DNS Configuration -----
+openshift_public_hostname=openshift.doblabs.io
+openshift_master_default_subdomain=apps.doblabs.io
+
+# -- Metrics Deployment -----
 openshift_hosted_metrics_deploy=false
 
+# -- Unknown :) -----
+#   Fixes weird issue about 1.4.* RPMs missing
+enable_docker_excluder=false
+enable_openshift_excluder=false
+
 [masters]
-apollo openshift_schedulable=true
+apollo.doblabs.io
 
 [nodes]
-apollo openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
-helo openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
+# apollo openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
+# helo openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
+
+# helo.doblabs.io openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
+
+apollo.doblabs.io openshift_schedulable=true openshift_node_labels="{'region': 'infra', 'zone': 'default'}" 
+helo.doblabs.io   openshift_schedulable=true
+
