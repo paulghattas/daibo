@@ -1,0 +1,36 @@
+[OSEv3:children]
+masters
+nodes
+
+[OSEv3:vars]
+
+# -- Ansible Configuration -----
+ansible_ssh_user=root
+
+# -- OpenShift Version -----
+deployment_type=origin
+openshift_release=v1.4.0
+
+# -- Configures Auth -----
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+containerized=true
+
+# -- DNS Configuration -----
+openshift_public_hostname=openshift.doblabs.io
+openshift_master_default_subdomain=apps.doblabs.io
+
+# -- Metrics Deployment -----
+openshift_hosted_metrics_deploy=false
+
+# -- Other -----
+enable_docker_excluder=false
+enable_openshift_excluder=false
+
+[masters]
+master.doblabs.io
+
+[nodes]
+master.doblabs.io openshift_schedulable=true openshift_node_labels="{'region': 'infra', 'zone': 'default'}" 
+node1.doblabs.io  openshift_schedulable=true
+node2.doblabs.io  openshift_schedulable=true
+
