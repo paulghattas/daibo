@@ -8,29 +8,43 @@ nodes
 ansible_ssh_user=root
 
 # -- OpenShift Version -----
+#   Docs say to use openshift_deployment_type, but the playbooks fail with that
+# openshift_deployment_type=origin
 deployment_type=origin
-openshift_release=v1.4.0
+# openshift_release=v3.6.0
+# openshift_pkg_version=v3.6.0
+openshift_image_tag=v3.6.0
+containerized=true
 
 # -- Configures Auth -----
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
-containerized=true
 
 # -- DNS Configuration -----
+openshift_hostname=openshift.doblabs.io
 openshift_public_hostname=openshift.doblabs.io
+openshift_master_cluster_hostname=openshift.doblabs.io
+openshift_master_cluster_public_hostname=openshift.doblabs.io
+
 openshift_master_default_subdomain=apps.doblabs.io
 
 # -- Metrics Deployment -----
 openshift_hosted_metrics_deploy=false
 
+# -- Requirements Check -----
+#   Currently my lab setup fails most requirement checks, so naturally
+#   the safest approach is to simply disable the checks
+openshift_disable_check=disk_availability,docker_storage,memory_availability
+
 # -- Unknown :) -----
-#   Fixes weird issue about 1.4.* RPMs missing
+#   Fixes weird issue about 1.4.* & 3.6.* RPMs missing
 enable_docker_excluder=false
 enable_openshift_excluder=false
 
 [masters]
-apollo.doblabs.io
+master.doblabs.io
 
 [nodes]
-apollo.doblabs.io openshift_schedulable=true openshift_node_labels="{'region': 'infra', 'zone': 'default'}" 
-helo.doblabs.io   openshift_schedulable=true
+master.doblabs.io openshift_schedulable=true openshift_node_labels="{'region': 'infra', 'zone': 'default'}" 
+node1.doblabs.io openshift_schedulable=true
+node2.doblabs.io openshift_schedulable=true
 
