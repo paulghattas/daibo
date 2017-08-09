@@ -24,4 +24,9 @@ htpasswd ./htpasswd <user>
 htpasswd -b ./htpasswd <user> <pass>
 
 
+= Delete an Application =
+
+* Deletes all pieces of an application based on it's label
+
+oc delete all -l app=<app-name>
 
