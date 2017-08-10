@@ -30,3 +30,7 @@ htpasswd -b ./htpasswd <user> <pass>
 
 oc delete all -l app=<app-name>
 
+
+= Check a Router Configuration =
+
+oc get endpoints --namespace=default --selector=router
