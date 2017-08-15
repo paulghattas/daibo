@@ -1,0 +1,13 @@
+= No Route to Host on oc cluster up =
+
+* Initial cluster up appears successful, but the router isn't configured correctly
+* Solution is to flush iptables (below)
+* https://github.com/openshift/origin/issues/12546
+
+oc cluster down
+sudo systemctl stop docker
+sudo iptables -F
+sudo iptables -t nat -F
+sudo systemctl start docker
+oc cluster up
+
