@@ -34,3 +34,12 @@ oc delete all -l app=<app-name>
 = Check a Router Configuration =
 
 oc get endpoints --namespace=default --selector=router
+
+
+= Port Forwarding =
+
+oc port-forward -p <pod> [<local_port>:]<pod_port>
+
+Mongo Example:
+oc port-forward -p mongodb-1-bw0xv 27017
+
