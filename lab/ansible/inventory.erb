@@ -1,6 +1,7 @@
 [OSEv3:children]
 masters
 nodes
+etcd
 
 [OSEv3:vars]
 
@@ -47,4 +48,7 @@ openshift.doblabs.io
 openshift.doblabs.io openshift_schedulable=true openshift_node_labels="{'region': 'infra', 'zone': 'default'}" 
 node1.doblabs.io  openshift_schedulable=true openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 node2.doblabs.io  openshift_schedulable=true openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+
+[etcd]
+openshift.doblabs.io
 
