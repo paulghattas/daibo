@@ -25,7 +25,20 @@ openshift_public_hostname=openshift.doblabs.io
 openshift_master_default_subdomain=apps.doblabs.io
 
 # -- Metrics Deployment -----
-openshift_hosted_metrics_deploy=false
+
+# From advanced installer "Configuring Cluster Metrics". Not sure this is needed.
+# openshift_hosted_metrics_deploy=true
+
+# Don't use persistent storage (for simplicity)
+openshift_metrics_cassandra_storage_type=emptydir
+
+# Enable this via the command line when running the metrics playbook:
+#   ansible-playbook -i inventory.erb openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml -e openshift_metrics_install_metrics=True
+# openshift_metrics_install_metrics=true
+
+# Supposedly the only *required* configuration for openshift_metrics_*
+openshift_metrics_hawkular_hostname=hawkular-m.doblabs.io
+
 
 # -- Requirements Check -----
 #   Currently my lab setup fails most requirement checks, so naturally
