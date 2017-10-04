@@ -11,3 +11,14 @@ sudo iptables -t nat -F
 sudo systemctl start docker
 oc cluster up
 
+= Nodes cannot access registry at docker-registry.default.svc =
+
+* Error looks something like:
+
+dial tcp: lookup docker-registry.default.svc on 10.224.20.20:53: no such host
+
+* There is a supposed fix committed, but I'm still seeing it. As a workaround,
+  I manually added the following to each node's /etc/resolv.conf
+
+search svc.cluster.local cluster.local
+
