@@ -1,3 +1,3 @@
-#!/bin/sh
+#!/bin/bash
 
-curl -k -H "Authorization: Bearer `oc whoami -t`" $@
+curl -k -H "Authorization: Bearer `oc whoami -t`" "$@"
