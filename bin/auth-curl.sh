@@ -1,3 +1,4 @@
 #!/bin/bash
 
-curl -k -H "Authorization: Bearer `oc whoami -t`" "$@"
+TOKEN=`oc whoami -t`
+curl -k -H "Authorization: Bearer $TOKEN" "$@"
