@@ -1,0 +1,59 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+
+[OSEv3:vars]
+
+# -- Ansible Configuration -----
+ansible_ssh_user=root
+
+# -- OpenShift Version -----
+deployment_type=origin
+openshift_image_tag=v3.7.0
+containerized=true
+
+# -- Configures Auth -----
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+# -- DNS Configuration -----
+openshift_public_hostname=openshift.doblabs.io
+openshift_master_default_subdomain=apps.doblabs.io
+
+# -- Metrics Deployment -----
+
+# From advanced installer "Configuring Cluster Metrics". Not sure this is needed.
+# openshift_hosted_metrics_deploy=true
+
+# Don't use persistent storage (for simplicity)
+# openshift_metrics_cassandra_storage_type=emptydir
+
+# Enable this via the command line when running the metrics playbook:
+#   ansible-playbook -i inventory.erb openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml -e openshift_metrics_install_metrics=True
+# openshift_metrics_install_metrics=true
+
+# Supposedly the only *required* configuration for openshift_metrics_*
+# openshift_metrics_hawkular_hostname=hawkular-m.doblabs.io
+
+
+# -- Requirements Check -----
+#   Currently my lab setup fails most requirement checks, so naturally
+#   the safest approach is to simply disable the checks
+openshift_disable_check=disk_availability,docker_storage,memory_availability,docker_image_availability
+
+
+# -- Unknown :) -----
+#   Fixes weird issue about 1.4.* & 3.6.* RPMs missing
+enable_docker_excluder=false
+enable_openshift_excluder=false
+
+
+[masters]
+openshift.doblabs.io
+
+[nodes]
+openshift.doblabs.io openshift_schedulable=true openshift_node_labels="{'region': 'infra', 'zone': 'default'}" 
+
+[etcd]
+openshift.doblabs.io
+
