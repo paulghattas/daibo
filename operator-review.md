@@ -3,10 +3,10 @@
 ## Cluster Access
 
 For "upstream" operators:
-* A running Kubernetes cluster; `minikube` is the simplest approach
+* A running Kubernetes cluster; [minikube](https://kubernetes.io/docs/setup/minikube/) is the simplest approach
 
 For "community" operators:
-* A running Kubernetes cluster; `minikube` is the simplest approach
+* A running Kubernetes cluster; [minikube](https://kubernetes.io/docs/setup/minikube/) is the simplest approach
 * Access to a running OpenShift 4 cluster
 
 ## Repositories
