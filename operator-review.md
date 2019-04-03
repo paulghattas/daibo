@@ -29,13 +29,30 @@ git clone https://github.com/operator-framework/operator-lifecycle-manager.git
 
 ## Other
 
+### Operator Courier Installation
+
 Operator Courier is used for metadata syntax checking and validation. This can be installed directly from `pip`:
 
 ```
 pip3 install operator-courier
 ```
 
-## Install and Configure Kubernetes
+### Quay Token
+
+In order to push operators into your quay.io account, a token is needed. This only needs to be done once and can be saved locally. The Operator Courier repository has a script to retrieve the token:
+
+```
+cd $COURIER_DIR
+./scripts/get-quay-token
+```
+
+A token takes the form:
+
+```
+"basic abcdefghijkl=="
+```
+
+# Install and Configure Kubernetes
 
 Optionally, delete the previous Kubernetes cluster:
 
@@ -49,7 +66,7 @@ Start the Kubernetes cluster:
 minikube start
 ```
 
-### Install OLM
+## Install OLM
 
 Install OLM into the cluster and remove the default catalog source (a testing catalog source will be created later):
 
@@ -57,19 +74,61 @@ Install OLM into the cluster and remove the default catalog source (a testing ca
 
 ```
 kubectl apply -f https://github.com/operator-framework/operator-lifecycle-manager/releases/download/0.8.1/olm.yaml
+
 kubectl delete catalogsource -n olm operatorhubio-catalog
 ```
 
-### Install the Operator Marketplace
+## Install the Operator Marketplace
 
 Install the Operator Marketplace. Unlike OLM, this is installed from a previously cloned repository. The second command here validates the installation by ensuring a `marketplace` namespace has been created.
 
 ```
 kubectl apply -f operator-marketplace/deploy/upstream/ --validate=false
+
 kubectl get ns | grep marketplace
 ```
 
 At this point, the Kubernetes cluster is running and configured with the necessary pieces.
+
+## Create the OperatorSource
+
+An `OperatorSource` is used to define the external datastore we are using to store operator bundles. More information can be found in the documentation included in the Operator Marketplace repository.
+
+An example can be found in the Operator Marketplace repository under `deploy/examples/upstream.operatorsource.cr.yaml`. The only required change is that `registryNamespace` _must_ be set to your quay.io username so the OperatorSource can find your uploaded operator bundles.
+
+Example (where `jdob` is the quay.io user):
+
+```
+apiVersion: operators.coreos.com/v1
+kind: OperatorSource
+metadata:
+  name: upstream-community-operators
+  namespace: marketplace
+spec:
+  type: appregistry
+  endpoint: https://quay.io/cnr
+  registryNamespace: jdob
+  displayName: "Upstream Community Operators"
+  publisher: "Red Hat"
+```
+
+Once the YAML has been changed, add it to the cluster:
+
+```
+OPERATOR_SOURCE=operator-source.yaml
+
+kubectl apply -f $OPERATOR_SOURCE
+```
+
+## View Available Operators
+
+Once the OperatorSource is deployed, the following command can be used to list the available operators (until an operator is pushed into quay, this list will be empty):
+
+```
+SOURCE_NAME=upstream-community-operators
+
+kubectl get opsrc $SOURCE_NAME -o=custom-columns=NAME:.metadata.name,PACKAGES:.status.packages -n marketplace
+```
 
 # Metadata Validation
 
@@ -82,6 +141,7 @@ Within the local clone of the `community-operators` repository, check out the pu
 ```
 PR_BRANCH=my-operator-pr
 PR_ID=12345
+
 git fetch origin pull/$PR_ID/head:$PR_BRANCH
 git checkout $PR_BRANCH
 ```
@@ -94,9 +154,34 @@ The following command will run Courier against the directory specified in `OPERA
 
 ```
 OPERATOR_DIR=./upstream-community-operators/synopsys
+
 operator-courier verify $OPERATOR_DIR --ui_validate_io
 ```
 
 If there is no output, the bundle passed Courier validation.
 
 # Testing the Running Operator
+
+## Push the Operator into Quay
+
+The Operator will be built locally and pushed into the tester's namespace in [quay.io](http://quay.io).
+
+> The value for `PACKAGE_NAME` *must* be the same as in the operator's `*package.yaml` file. Assuming `OPERATOR_DIR` is specified, this can be found by running `cat $OPERATOR_DIR/*.package.yaml`.
+
+> The `PACKAGE_VERSION` is entirely up to the tester to decide.
+
+```
+OPERATOR_DIR=./upstream-community-operators/synopsys
+QUAY_USERNAME=jdob
+PACKAGE_NAME=<see note above>
+PACKAGE_VERSION=<see note above>
+TOKEN=<full token from quay, including quotes and the word basic>
+
+operator-courier push $OPERATOR_DIR $QUAY_USERNAME $PACKAGE_NAME $PACKAGE_VERSION $TOKEN
+```
+
+Once that has completed, you should see it listed in your account's [Applications](https://quay.io/application/) tab.
+
+> If the application has a lock icon, click through to the application and its Settings tab and select to make the application public.
+
+## Redeploy the
