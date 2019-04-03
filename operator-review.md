@@ -70,3 +70,33 @@ kubectl get ns | grep marketplace
 ```
 
 At this point, the Kubernetes cluster is running and configured with the necessary pieces.
+
+# Metadata Validation
+
+## Download the Operator Pull Request
+
+Within the local clone of the `community-operators` repository, check out the pull request locally. The following commands will create a new local branch named with the value in `PR_BRANCH` as it downloads the PR changes and then switches to that branch:
+
+> The PR_ID value is listed after the pull request name in GitHub. Do not include the #.
+
+```
+PR_BRANCH=my-operator-pr
+PR_ID=12345
+git fetch origin pull/$PR_ID/head:$PR_BRANCH
+git checkout $PR_BRANCH
+```
+
+## Run Courier
+
+Courier will verify the fields included in the Operator metadata. The fields can also be manually reviewed according to [the operator CSV documentation](https://github.com/operator-framework/community-operators/blob/master/docs/required-fields.md).
+
+The following command will run Courier against the directory specified in `OPERATOR_DIR`. That value should point to the directory with the operator file bundle.
+
+```
+OPERATOR_DIR=./upstream-community-operators/synopsys
+operator-courier verify $OPERATOR_DIR --ui_validate_io
+```
+
+If there is no output, the bundle passed Courier validation.
+
+# Testing the Running Operator
