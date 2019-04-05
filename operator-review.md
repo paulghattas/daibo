@@ -184,4 +184,18 @@ Once that has completed, you should see it listed in your account's [Application
 
 > If the application has a lock icon, click through to the application and its Settings tab and select to make the application public.
 
-## Redeploy the
+## Redeploy the Operator Source
+
+When operators are pushed to quay.io, the `OperatorSource` may not pick them up. Simply edit the source and remove the `status` field to trigger a redeployment and clear the cache:
+
+```
+SOURCE_NAME=upstream-community-operators
+
+kubectl edit opsrc -n marketplace $SOURCE_NAME
+```
+
+Once that has been saved, check the marketplace namespace to ensure that the operator source pod is being redeployed:
+
+```
+kubectl get pods -n marketplace
+```
