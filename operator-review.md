@@ -199,3 +199,60 @@ Once that has been saved, check the marketplace namespace to ensure that the ope
 ```
 kubectl get pods -n marketplace
 ```
+
+## Create CatalogSourceConfig
+
+Once the OperatorSource has been added, images will be pulled from quay.io. A `CatalogSourceConfig` needs to be created in the marketplace namespace to install those Operators.
+
+An example CatalogSourceConfig is as follows:
+
+```
+apiVersion: operators.coreos.com/v1
+kind: CatalogSourceConfig
+metadata:
+  name: upstream-community-operators
+  namespace: marketplace
+spec:
+  targetNamespace: local-operators
+  packages: descheduler,jaeger
+  csDisplayName: "Upstream Community Operators"
+  csPublisher: "Red Hat"
+```
+
+In the above example:
+
+* `local-operators` is a namespace that OLM is watching.
+* `packages` is a comma-separated list of operators that have been pushed to quay.io and should be deployable by this source.
+
+Deploy te `CatalogSourceConfig` resource:
+
+```
+CATALOG_SOURCE=./catalog-source-config.yaml
+
+kubectl apply -f
+```
+
+When this file is deployed, a `CatalogSourceConfig` resource is created in the namespace under `metadata.namespace` (in the above example, "marketplace").
+
+```
+kubectl get catalogsourceconfig -n marketplace
+NAME                                           STATUS      MESSAGE                                       AGE
+upstream-community-operators         Succeeded   The object has been successfully reconciled   93s
+```
+
+Additionally, a `CatalogSource` is created in the namespace indicated in `spec.targetNamespace` (in the above example, "local-operators"):
+
+```
+kubectl get catalogsource -n local-operators
+NAME                           NAME                           TYPE   PUBLISHER   AGE
+upstream-community-operators   Upstream Community Operators   grpc   Red Hat     3m32s
+```
+
+Note that there is no `CatalogSourceConfig` object present in the target namespace and there is no `CatalogSource` corresponding to this config in the metadata-defined namespace:
+
+```
+kubectl get catalogsourceconfig -n local-operators
+
+kubectl get catalogsource -n marketplace
+```
+
