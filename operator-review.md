@@ -256,3 +256,40 @@ kubectl get catalogsourceconfig -n local-operators
 kubectl get catalogsource -n marketplace
 ```
 
+## Create an OperatorGroup
+
+If the Operator is to be installed in a specific namespace, an `OperatorGroup` must be created in the destination namespace.
+
+```
+apiVersion: operators.coreos.com/v1alpha2
+kind: OperatorGroup
+metadata:
+  name: <my-group>
+  namespace: <destination-ns>
+spec:
+  targetNamespaces:
+  - <destination-ns>
+```
+
+## Create a Subscription
+
+The last piece ties together all of the previous steps. A `Subscription` is created to the operator.
+
+```
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: my-sub
+  namespace: <destination-ns>
+spec:
+  channel: stable
+  name: <package-name>
+  source: <catalog-source>
+  sourceNamespace: <catalog-source-ns>
+```
+
+# Resources
+
+* [Load and Install a Custom Operator](https://github.com/operator-framework/operator-registry#building-a-catalog-of-operators-using-operator-registry)
+* [Cluster Service Version Spec](https://github.com/operator-framework/operator-lifecycle-manager/blob/master/Documentation/design/building-your-csv.md)
+* [Example Bundle](https://github.com/operator-framework/community-operators/tree/master/upstream-community-operators/etcd)
