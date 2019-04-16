@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1
+kind: CatalogSourceConfig
+metadata:
+  name: jdob-csc
+  namespace: marketplace
+spec:
+  targetNamespace: synopsys-ns
+  packages: synopsys
+  csDisplayName: "Jay's Synopsys Operators"
+  csPublisher: "Red Hat"
+
